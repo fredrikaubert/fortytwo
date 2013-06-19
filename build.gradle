@@ -1,0 +1,33 @@
+apply plugin:'groovy'
+apply plugin:'idea'
+apply plugin:'application'
+
+project.javafxHome = System.env['JAVAFX_HOME'] ?: "/Library/Java/JavaVirtualMachines/jdk1.7.0_17.jdk/Contents/Home/jre"
+mainClassName = "no.parasit.fortytwo.Infoboard"
+repositories { mavenCentral() }
+ 
+dependencies {
+compile 'org.codehaus.groovy:groovy-all:2.0.3'
+compile 'org.codehaus.groovyfx:groovyfx:0.3.1'
+compile 'com.github.groovy-wslite:groovy-wslite:0.7.2'
+testCompile 'junit:junit:4.8.2'
+//test 'org.junit:junit:4.5.1'
+compile files("${javafxHome}/lib/jfxrt.jar")
+}
+ 
+//task run(type: JavaExec) {
+//main = 'no.parasit.fortytwo.Infoboard'
+//classpath sourceSets.main.runtimeClasspath
+//}
+ 
+task makeDirs(description:'make all dirs for project setup') << {
+def sources = [sourceSets.main, sourceSets.test]
+sources*.allSource*.srcDirs.flatten().each { File srcDir ->
+println "making $srcDir"
+srcDir.mkdirs()
+}
+}
+ 
+task wrap(type:Wrapper, description:"create a gradlew") {
+gradleVersion = '1.6'
+}
